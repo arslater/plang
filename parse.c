@@ -11,6 +11,8 @@ void parseRegex(char * regex, char ** file) {
     int i = 0;
     int j = 0;
     int k = 0;
+    int match_start = 0;
+    int match_end   = 0;
     char look_ahead=0;
     char *literal = (char *) malloc(sizeof(char) * 100);
     ///////////////////////////////////////
@@ -24,9 +26,12 @@ void parseRegex(char * regex, char ** file) {
     {
         while (regex[k] != NULL)
         {
-            printf("regex[%d]:%c | file[%d]:%c...", i,regex[k],i,file[0][i]);
-            if(regex[k] == file[1][i])
+            printf("regex[%d]:%c | file[%d]:%c...", i,regex[k],i,file[j][i]);
+            if(regex[k] == file[j][i])
+            {
                 printf("check!\n");
+
+            }
             else
             {
                 if (regex[k] == 0x2a)
@@ -34,17 +39,23 @@ void parseRegex(char * regex, char ** file) {
                     printf("regular expression '%c' detected. Checking for valid pattern\n",regex[i]);
                     while(regex[k-1] == file[0][i])
                     {
-                        printf("The charachter '%c' MATCHES the Line charachter: %c\n",regex[k-1],file[0][i]);
+                        printf("The charachter '%c' MATCHES the Line charachter: %c\n",regex[k-1],file[j][i]);
                         i++;
                     }
-                    printf("The charater '%c' MISMATCHES the Line character '%c'\n",regex[k-1], file[0][i]);
+                    printf("The charater '%c' MISMATCHES the Line character '%c'\n",regex[k-1], file[j][i]);
+                    //printf("On line")
                 } else
                     printf("fail\n");
             }
             i++;
             k++;
         }
+        match_start = 0;
+        match_end = 0;
         j++;
+        printf("++++++++++++++++LINE %d++++++++++++++++++\n", j);
+        i = 0;
+        k = 0;
         (elements -> lineNum)++;
     }
 }
