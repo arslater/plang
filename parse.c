@@ -22,9 +22,9 @@ void parseRegex(char * regex, char ** file) {
 
     //////////////////////////
     // Is this parsing????????
-    while(file[j] != NULL)
+    while(file[j+1] != NULL)
     {
-        while (regex[k] != NULL)
+        while (file[j][i] != NULL)
         {
             printf("regex[%d]:%c | file[%d]:%c...", i,regex[k],i,file[j][i]);
             if(regex[k] == file[j][i])
@@ -43,9 +43,12 @@ void parseRegex(char * regex, char ** file) {
                         i++;
                     }
                     printf("The charater '%c' MISMATCHES the Line character '%c'\n",regex[k-1], file[j][i]);
+                    k = 0;
                     //printf("On line")
-                } else
+                } else {
                     printf("fail\n");
+                    k = 0;
+                }
             }
             i++;
             k++;
