@@ -43,11 +43,13 @@ int main(int argc, char ** argv)
             {
                 readLine[i] = (char *)malloc(sizeof(char)*200);
                 fgets(readLine[i], 200,fp);
+                printf("Reading: %s",readLine[i]);
                 if (feof(fp))
                     break;
-                printf("Reading: %s",readLine[i]);
                 i++;
             }
+            printf("\n");
+            // Why you printing new line...?
            // doTest(readLine);
             parseRegex(regex, readLine);
             i--;

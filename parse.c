@@ -1,6 +1,7 @@
 //
 // Created by anita on 2/21/18.
 //
+//@formatter:off
 
 #include <string.h>
 #include "parse.h"
@@ -9,6 +10,8 @@ void parseRegex(char * regex, char ** file) {
     printf("Parsing '%s'\n", regex);
     int i = 0;
     int j = 0;
+    int k = 0;
+    char look_ahead=0;
     char *literal = (char *) malloc(sizeof(char) * 100);
     ///////////////////////////////////////
     // Objective 2: try to get the pieces parsed
@@ -17,30 +20,29 @@ void parseRegex(char * regex, char ** file) {
 
     //////////////////////////
     // Is this parsing????????
-    while(file[j] != NULL) {
-        while (regex[i] != NULL) {
-            char curSym;
-            switch (regex[i]) {
-                case '*':
-                    curSym = '*';
-                    printf("Hey there's a splat.\n");
-                    doSplat( file[i], elements);
-                    break;
-                case ']':
-                    curSym = ']';
-                    printf("Hey, there's a brace\n");
-                    break;
-                case '+':
-                    curSym = '+';
-                    printf("Hey, there's a plus\n");
-                    break;
-                default:
-                    printf("Hey, there's a letter here. Adding '%c' to '%s\n", regex[i], elements ->literal);
-                    elements->literal = (char *) malloc(sizeof(char)*2);
-                    elements->literal+= regex[i];
-                    break;
-            } // just text
+    while(file[j] != NULL)
+    {
+        while (regex[k] != NULL)
+        {
+            printf("regex[%d]:%c | file[%d]:%c...", i,regex[k],i,file[0][i]);
+            if(regex[k] == file[1][i])
+                printf("check!\n");
+            else
+            {
+                if (regex[k] == 0x2a)
+                {
+                    printf("regular expression '%c' detected. Checking for valid pattern\n",regex[i]);
+                    while(regex[k-1] == file[0][i])
+                    {
+                        printf("The charachter '%c' MATCHES the Line charachter: %c\n",regex[k-1],file[0][i]);
+                        i++;
+                    }
+                    printf("The charater '%c' MISMATCHES the Line character '%c'\n",regex[k-1], file[0][i]);
+                } else
+                    printf("fail\n");
+            }
             i++;
+            k++;
         }
         j++;
         (elements -> lineNum)++;
