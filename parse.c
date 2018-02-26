@@ -39,7 +39,7 @@ void parseRegex(char * regex, char ** file) {
                     elements->literal = (char *) malloc(sizeof(char)*2);
                     elements->literal+= regex[i];
                     break;
-            }
+            } // just text
             i++;
         }
         j++;

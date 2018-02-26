@@ -9,7 +9,7 @@ int main(int argc, char ** argv)
 {
     unsigned short int RETRN_CODE = 0;
     char ** readLine    = (char **) malloc(sizeof(char) * 200);
-    char * buff        = (char *) malloc(sizeof(char) * 64);
+    //char * buff        = (char *) malloc(sizeof(char) * 64);
     char * regex       = (char *) malloc(sizeof(char) * 64);
     FILE * fp          = NULL;
 
@@ -54,6 +54,7 @@ int main(int argc, char ** argv)
 
             fclose(fp);
         }
+        free(readLine);
     }
     else
     {
