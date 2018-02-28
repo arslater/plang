@@ -11,47 +11,79 @@ void parseRegex(char * regex, char ** file) {
     int i = 0;
     int j = 0;
     int k = 0;
-    int match_start = 0;
-    int match_end   = 0;
+    int match_start = -1;
+    int match_end   = -1;
+    int regex_length = 0;
     char look_ahead=0;
     char *literal = (char *) malloc(sizeof(char) * 100);
     ///////////////////////////////////////
     // Objective 2: try to get the pieces parsed
 
     elementsStruct *elements = malloc(sizeof(elementsStruct));
-
+    int rep = 0;
+    for(i=0;regex[i]!=0;i++)
+        regex_length = i;
+    i=0;
     //////////////////////////
     // Is this parsing????????
     while(file[j+1] != NULL)
     {
         while (file[j][i] != NULL)
         {
-            printf("regex[%d]:%c | file[%d]:%c...", i,regex[k],i,file[j][i]);
+            printf("regex[%d]:%c | file[%d]:%c...", k,regex[k],i,file[j][i]);
+
+            if (regex[k] == 0)
+            {
+               if((match_end-match_start)>=regex_length) {
+                    printf("**********VALID MATCH FOUND********\n");
+                   printf("**********VALID MATCH FOUND from pos %d - pos %d ********\n", match_start, match_end);
+                    break;
+                }
+                i=0;
+            }
+
             if(regex[k] == file[j][i])
             {
-                printf("check!\n");
 
+                if(match_start==-1 || match_end == -1) {
+                    match_start = i;
+                    match_end = i;
+                }
+                else
+                    match_end++;
+                printf("check! Match at char %d\n", match_start);
             }
             else
             {
-                if (regex[k] == 0x2a)
-                {
-                    printf("regular expression '%c' detected. Checking for valid pattern\n",regex[i]);
-                    while(regex[k-1] == file[0][i])
-                    {
-                        printf("The charachter '%c' MATCHES the Line charachter: %c\n",regex[k-1],file[j][i]);
+                if (regex[k] == '+') {
+                    printf("regular expression '%c' detected. Checking for valid pattern\n", regex[k]);
+                    while (regex[k - 1] == file[j][i]) {
+                        printf("The charachter '%c' MATCHES the Line charachter: %c\n", regex[k - 1], file[j][i]);
+                        rep = 1;
                         i++;
+                        match_end++;
                     }
-                    printf("The charater '%c' MISMATCHES the Line character '%c'\n",regex[k-1], file[j][i]);
+                    printf("The charater '%c' MISMATCHES the Line character '%c'\n", regex[k - 1], file[j][i]);
+                    if ((match_end - match_start) >= regex_length) {
+                        printf("**********VALID MATCH FOUND from pos %d - pos %d ********\n", match_start, match_end);
+                        break;
+                    }
                     k = 0;
                     //printf("On line")
-                } else {
-                    printf("fail\n");
-                    k = 0;
                 }
+                else
+                {
+                    printf("fail\n");
+                    k = -1;
+                }
+
             }
-            i++;
             k++;
+            i++;
+            //printf("
+
+            //else
+             //   printf("k:%d\n",k);
         }
         match_start = 0;
         match_end = 0;
