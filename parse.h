@@ -27,3 +27,4 @@ typedef struct elementsStruct{
 
 
 #endif //PROJ1_PARSE_H
+//test regex like a*b*c* returns empty string
