@@ -11,6 +11,7 @@ void parseRegex(char * regex, char ** file) {
     int i = 0;
     int j = 0;
     int k = 0;
+    int m = 0;
     int stash = 0;
     int res_ind = 0;
     int match_start = -1;
@@ -72,6 +73,19 @@ void parseRegex(char * regex, char ** file) {
                     i--;
                     match_end--;
                     k++;
+                }
+                else if( regex[k] == '[')
+                {
+                    while(regex[k] != ']')
+                    {
+                        if(regex[k] == file[j][i]) {
+                            printf("#%%!!# %c", file[j][i]);
+                            match_end++;
+                        }
+                        k++;
+                    }
+                    k++;
+                    i++;
                 }
                 else
                 {
