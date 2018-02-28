@@ -11,6 +11,7 @@ void parseRegex(char * regex, char ** file) {
     int i = 0;
     int j = 0;
     int k = 0;
+    int stash = 0;
     int res_ind = 0;
     int match_start = -1;
     int match_end   = -1;
@@ -31,34 +32,60 @@ void parseRegex(char * regex, char ** file) {
     {
         while (file[j][i] != NULL)
         {
+            stash = i;
             printf("\ncomaparing regex[%d]:%c | file[%d]:%c...",k,regex[k],i,file[j][i]);
-            if(regex[k] == '+' || regex[k]=='*' || regex[k+1] == '*'|| regex[k] == '[' || regex[k]== '\\')
+            if(regex[k+1] == '+' || regex[k] == '+' || regex[k]=='*' || regex[k+1] == '*'|| regex[k] == '[' || regex[k] == '\\')
             {
                 // special charahcter
-                printf("Special charahcter '%c' detected\n", regex[k]);
+                printf("Special charahcter '%c' detected ", regex[k]);
 
                 // mathces zero
                 if(regex[k+1] == '*') {
-                    printf("comparing %c and %c.\n", regex[k], file[j][i]);
+                    printf(" throwing in %c.", file[j][i]);
 
-                    k++;
-                    i++;
-                    match_end++;
+                    printf("\t#1# %c",file[j][i]);
+                    //printf(" dem variables are %c and %c ", regex[k], file[j][i]);
+                    if(regex[k]!=file[j][i])
+                    {
+                        printf("&&&&");
+                        k ++;
+                        i++;
+                        match_end++;
+                    }
+                    printf(" dem variables are %c and %c ", regex[k], file[j][i]);
                 }
                 //matches one & more
-                if(regex[k] == file[j][i])
+                if(regex[k+1] == '+' || regex[k+1] == '*')
                 {
+                    printf("**");
                     while( regex[k] == file[j][i])
                     {
+                        //if((regex[k+2] == file[j][i]){
+                        //    printf("$$$$$$$");
+                         //   break;
+                        //}
+                        printf("\t#^^# %c",file[j][i]);
+                        printf("\ncomaparing regex[%d]:%c | file[%d]:%c...",k,regex[k],i,file[j][i]);
                         match_end++;
                         i++;
                     }
+                    i--;
+                    match_end--;
+                    k++;
                 }
                 else
                 {
-                    i++;
-                    k++;
-                    match_end++;
+                    printf("\t#&# %c",file[j][i]);
+                    if(regex[k] == '*' || regex[k] == '+' || regex[k] == '\\')
+                    {
+                        k++;
+                    }
+                   else
+                    {
+                       i++;
+                      // match_end++;
+                    }
+
                 }
             }
             else if(regex[k] == file[j][i])
@@ -71,6 +98,7 @@ void parseRegex(char * regex, char ** file) {
                     match_start = i;
                     match_end   = i;
                 }
+                printf("\t\t\t\t\t#@# %c",file[j][i]);
                 k++;
                 i++;
                 match_end++;
@@ -80,21 +108,25 @@ void parseRegex(char * regex, char ** file) {
                 //other
                 printf("fail");
                 memset(literal,0,sizeof(literal));
+                match_end   = -1;
+                match_start = -1;
+                if (k == 0)
+                    i++;
+                else
+                    i = stash-1;
                 k = 0;
-                match_end = -1;
-                i++;
             }
-            if(k > regex_length)
+            if(k == regex_length+1&& match_end != -1 )
             {
                 printf("Match found from pos %d to pos %d on line %d\n", match_start, match_end, j);
                 break;
             }
-            printf("Current match: start: %d, end%d",match_start,match_end);
+            printf(" Current match: start: %d, end%d",match_start,match_end);
         }
         if(match_end == -1)
             printf("ULTRA FAIL\n");
         printf("Final values: start:%d end%d total:%d length:%d Result is \n", match_start, match_end, match_end-match_start, regex_length);
-        for(i=match_start;i<match_end-1;i++)
+        for(i=match_start;i<match_end;i++)
             printf("%c", file[j][i]);
         match_start = -1;
         match_end = -1;
