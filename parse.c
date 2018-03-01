@@ -31,7 +31,7 @@ void parseRegex(char * regex, char ** file) {
     // Is this parsing????????
     while(file[j+1] != NULL)
     {
-        while (file[j][i] != NULL)
+        while (file[j][i] != NULL && file[j][m] != NULL)
         {
             stash = i;
             printf("\ncomaparing regex[%d]:%c | file[%d]:%c...",k,regex[k],i,file[j][i]);
@@ -53,6 +53,12 @@ void parseRegex(char * regex, char ** file) {
                         i++;
                         match_end++;
                     }
+                    match_end--;
+                    if(regex_length == 1) {
+                        match_end = 0;
+                        match_start =0;
+                        break;
+                    }
                     printf(" dem variables are %c and %c ", regex[k], file[j][i]);
                 }
                 //matches one & more
@@ -61,17 +67,18 @@ void parseRegex(char * regex, char ** file) {
                     printf("**");
                     while( regex[k] == file[j][i])
                     {
-                        //if((regex[k+2] == file[j][i]){
-                        //    printf("$$$$$$$");
-                         //   break;
-                        //}
+                        if((regex[k+2] == file[j][i])){
+                            printf("$$$$$$$");
+                            if(file[j][i+1] != file[j][stash])
+                                break;
+                        }
                         printf("\t#^^# %c",file[j][i]);
                         printf("\ncomaparing regex[%d]:%c | file[%d]:%c...",k,regex[k],i,file[j][i]);
                         match_end++;
                         i++;
                     }
-                    i--;
-                    match_end--;
+                    //i--
+                    // match_end--;
                     k++;
                 }
                 else if( regex[k] == '[')
@@ -93,11 +100,12 @@ void parseRegex(char * regex, char ** file) {
                     if(regex[k] == '*' || regex[k] == '+' || regex[k] == '\\')
                     {
                         k++;
+                       // i=stash;
                     }
                    else
                     {
                        i++;
-                      // match_end++;
+                       match_end++;
                     }
 
                 }
@@ -129,6 +137,7 @@ void parseRegex(char * regex, char ** file) {
                 else
                     i = stash-1;
                 k = 0;
+                m++;
             }
             if(k == regex_length+1&& match_end != -1 )
             {
@@ -140,7 +149,7 @@ void parseRegex(char * regex, char ** file) {
         if(match_end == -1)
             printf("ULTRA FAIL\n");
         printf("Final values: start:%d end%d total:%d length:%d Result is \n", match_start, match_end, match_end-match_start, regex_length);
-        for(i=match_start;i<match_end;i++)
+        for(i=match_start;i<match_end+1;i++)
             printf("%c", file[j][i]);
         match_start = -1;
         match_end = -1;
